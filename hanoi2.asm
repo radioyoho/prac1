@@ -24,15 +24,25 @@ fill:
 	
 	jal hanoi
 	j exit			#ra will return here after the last pop
-
+	
+secondhanoi:
+	bne $a0, $zero, hanoi
+	addi $sp, $sp, 20	#func ended
+	jr $ra
 	#</init>
 hanoi: 
 	#<base>
-	bne $a0, $t7, first	#if !zero goes to first recursive func
-	j movet
+	bne $a0, $zero, first	#if !zero goes to first recursive func
+	addi $sp, $sp, 20	#func ended
+	lw $a0, 0($sp)		#POP height
+	lw $a1, 4($sp)		#POP org
+	lw $a2, 8($sp)		#POP dest
+	lw $a3, 12($sp)		#POP aux
+	lw $ra, 16($sp)		#POP ra
+	jr $ra
 	#</base>
-first: 
 	
+first: 
 	addi $a0, $a0, -1	#height param -1
 	add $t0, $zero, $a2	#switch dest with aux
 	add $a2, $zero, $a3	
@@ -81,55 +91,42 @@ place:
 	
 retvalue2:
 	addi $t2, $t2, -1	#counter--
-	beq $t2, $zero, presecond	#if counter  = zero, all good
+	beq $t2, $zero, second	#if counter  = zero, all good
 	addi $a2, $a2, -4	#if !zero dec adress
 	j retvalue2		#repeat
 	
-presecond:
-	jr $ra
-	j aftersecond
+#-------------------------------END OF MOVE-----------------------------
+	
+#presecond:
+	#jr $ra
+	#j aftersecond
 	#</MOVE>
 	#GOES TO SECOND RIGHT AFTER
 second: 
 	#SWITCH AUX -> FROM, FROM -> AUX
-	beq $a0, $t7, loopsecond	
 	
 	addi $a0, $a0, -1	#height param -1
 	add $t0, $zero, $a1	#swith org with aux
 	add $a1, $zero, $a3
 	add $a3, $zero, $t0
-
+	
 	addi $sp, $sp, -20	#PUSH
-	sw $a0, 0($sp)		#PUSH height
-	sw $a1, 4($sp)		#PUSH org
-	sw $a2, 8($sp)		#PUSH dest
-	sw $a3, 12($sp)		#PUSH aux
-	sw $ra, 16($sp)		#PUSH ra
-	jal hanoi 
-aftersecond:
-	#add $t6, $zero, $zero 	#SECOND REC JR
-
-	#addi $sp, $sp, 20	#func ended
-	#lw $a0, 0($sp)		#POP height
-	#lw $a1, 4($sp)		#POP org
-	#lw $a2, 8($sp)		#POP dest
-	#lw $a3, 12($sp)		#POP aux
-	#lw $ra, 16($sp)		#POP ra
-	#jr $ra			#should return to move
+	sw $a0, 0($sp)
+	sw $a1, 4($sp)
+	sw $a2, 8($sp)
+	sw $a3, 12($sp)	
+	sw $ra, 16($sp)
 	
+	jal secondhanoi 
 	
-loopsecond:
-	addi $t3, $t3, 1
-	add $t4, $zero, $t3
-secondpop:
 	addi $sp, $sp, 20	#func ended
 	lw $a0, 0($sp)		#POP height
 	lw $a1, 4($sp)		#POP org
 	lw $a2, 8($sp)		#POP dest
 	lw $a3, 12($sp)		#POP aux
 	lw $ra, 16($sp)		#POP ra
-	#addi $t4, $t4, -1
-	#bne $t4, $zero, secondpop
-	jr $ra			#should return to move
+	
+	jr $ra
+	
 exit: 
 	#POP AND RETURN TO FIRST
