@@ -1,0 +1,52 @@
+.data
+.text
+	#<init>
+	addi $t7, $zero, 1	#temporary to store 1
+
+	addi $s0,$zero, 3	#number of discs
+	add $a0, $zero, $s0	#copy to a0
+	lui $s1,0x1001		#Upper adress
+	lui $a1,0x1001		#upper adress
+	lui $a2,0x1001		#upper adress
+	lui $a3,0x1001		#upper adress
+	
+	addi $a1, $a1,0x00	#ORIGIN tower
+	addi $a2, $a2,0x20	#AUX tower
+	addi $a3, $a3,0x40	#DESTINY tower	
+fill: 
+	sw $a0,0($s1)		#store in adress
+	addi $s1, $s1, 4	#move adress
+	addi $a0, $a0, -1	#sub 1 to disc tower	
+	bne $a0, $zero, fill	#loop
+	add $a0, $s0, $zero 	#reinitialize a0
+	jal hanoi
+	j exit			#ra will return here after the last pop
+	#</init>
+hanoi:	
+	addi $sp,$sp,-4
+	sw $ra,0($sp)
+		beq $a0, $t7, base	#if n>1 goes to recursion
+		j recursion1
+		jal move1
+		addi $sp,$sp,4
+	lw $ra,0($sp)
+	jr $ra
+
+base:	lui $s1,0x1001
+	bne $t0,$s0,baseMul
+	sw $t7,0($s1)
+	jr $ra
+baseMul: addi, $s1,$s1,4
+	j base
+	
+recursion1:	
+		addi $a0, $a0, -1	#height param -1
+		add $t0, $zero, $a2	#switch dest with aux
+		add $a2, $zero, $a3	
+		add $a3, $zero, $t0
+
+move1:	
+
+	
+
+exit:
