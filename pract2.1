@@ -19,7 +19,7 @@ fill:
 	addi $a0, $a0, -1	#sub 1 to disc tower	
 	bne $a0, $zero, fill	#loop
 	add $a0, $s0, $zero 	#reinitialize a0
-	jal hanoi
+	jal hanoi					#call hanoi, (N,ORIGIN, DESTINY, AUX)
 	j exit			#ra will return here after the last pop
 	#</init>
 hanoi:	
@@ -50,11 +50,11 @@ recursion1:
 			sw $a2, 4($sp)
 			sw $a3, 8($sp)	
 			sw $ra, 12($sp)
-		jal hanoi
-			sw $a1, 0($sp)
-			sw $a2, 4($sp)
-			sw $a3, 8($sp)	
-			sw $ra, 12($sp)
+		jal hanoi		#call hanoi,(N-1,ORIGIN, AUX, DESTINY)
+			lw $a1, 0($sp)
+			lw $a2, 4($sp)
+			lw $a3, 8($sp)	
+			lw $ra, 12($sp)
 		addi $sp, $sp, 16
 		jr $ra
 
@@ -71,11 +71,11 @@ recursion2:
 			sw $a2, 4($sp)
 			sw $a3, 8($sp)	
 			sw $ra, 12($sp)
-		jal hanoi
-			sw $a1, 0($sp)
-			sw $a2, 4($sp)
-			sw $a3, 8($sp)	
-			sw $ra, 12($sp)
+		jal hanoi		#call hanoi,(N-1,AUX, DESTINY, ORIGIN)
+			lw $a1, 0($sp)
+			lw $a2, 4($sp)
+			lw $a3, 8($sp)	
+			lw $ra, 12($sp)
 		addi $sp, $sp, 16
 		jr $ra	
 
