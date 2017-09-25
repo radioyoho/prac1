@@ -20,10 +20,16 @@ fill:
 	addi $s1, $s1, 4	#move adress
 	addi $a0, $a0, -1	#sub 1 to disc tower	
 	bne $a0, $zero, fill	#loop
-	addi $a0, $s0, 1 	#reinitialize a0 plus one so hanoi calls for the first time in the function
+	#addi $a0, $s0, 1	#reinitialize a0 plus one so hanoi calls for the first time in the function
+	add $a0, $zero, $s0
+	addi $t4, $zero, 1
 	
-	jal hanoi
+	jal starthanoi
 	j exit			#ra will return here after the last pop
+starthanoi:
+	addi $sp, $sp, -20	#PUSH
+	sw $ra, 16($sp)
+	j starthanoi2
 
 #----------------------------MAIN--------------------------------------------------
 hanoi:
@@ -90,7 +96,7 @@ first:
 	add $t0, $zero, $a2	#switch dest with aux
 	add $a2, $zero, $a3	
 	add $a3, $zero, $t0
-	
+starthanoi2:	
 	jal hanoi
 	
 #-----------------------------MOVE---------------------------------------------------
@@ -140,11 +146,14 @@ second:
 	
 	jal hanoi
 	
+	#addi $t4, $t4, 1
 	addi $sp, $sp, 20	#func ended
 	lw $a0, 0($sp)		#POP height
 	lw $a1, 4($sp)		#POP org
 	lw $a2, 8($sp)		#POP dest
 	lw $a3, 12($sp)		#POP aux
 	lw $ra, 16($sp)
+	
+	#beq $t4, $s0, exit
 	jr $ra
 exit:
