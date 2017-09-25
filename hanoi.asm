@@ -81,13 +81,13 @@ place:
 	
 retvalue2:
 	addi $t2, $t2, -1	#counter--
-	beq $t2, $zero, presecond	#if counter  = zero, all good
+	beq $t2, $zero, second	#if counter  = zero, all good
 	addi $a2, $a2, -4	#if !zero dec adress
 	j retvalue2		#repeat
 	
-presecond:
-	jr $ra
-	j aftersecond
+#presecond:
+	#jr $ra
+	#j aftersecond
 	#</MOVE>
 	#GOES TO SECOND RIGHT AFTER
 second: 
@@ -119,7 +119,7 @@ aftersecond:
 	
 	
 loopsecond:
-	addi $t3, $t3, 1
+	add $t3, $zero, $a0
 	add $t4, $zero, $t3
 secondpop:
 	addi $sp, $sp, 20	#func ended
@@ -128,8 +128,8 @@ secondpop:
 	lw $a2, 8($sp)		#POP dest
 	lw $a3, 12($sp)		#POP aux
 	lw $ra, 16($sp)		#POP ra
-	#addi $t4, $t4, -1
-	#bne $t4, $zero, secondpop
+	addi $t4, $t4, -1
+	bne $t4, $zero, secondpop
 	jr $ra			#should return to move
 exit: 
 	#POP AND RETURN TO FIRST
