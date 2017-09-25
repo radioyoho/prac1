@@ -10,9 +10,9 @@
 	lui $a2,0x1001		#upper adress
 	lui $a3,0x1001		#upper adress
 	
-	addi $a1, $a1,0x00	#ORIGIN tower
-	addi $a2, $a2,0x20	#AUX tower
-	addi $a3, $a3,0x40	#DESTINY tower	
+		addi $a1, $a1,0x00	#ORIGIN tower
+		addi $a2, $a2,0x20	#AUX tower
+		addi $a3, $a3,0x40	#DESTINY tower	
 fill: 
 	sw $a0,0($s1)		#store in adress
 	addi $s1, $s1, 4	#move adress
@@ -24,29 +24,59 @@ fill:
 	#</init>
 hanoi:	
 	addi $sp,$sp,-4
-	sw $ra,0($sp)
+	sw $ra,0($sp)		#back up Register Address
 		beq $a0, $t7, base	#if n>1 goes to recursion
-		j recursion1
-		jal move1
-		addi $sp,$sp,4
+		jal recursion1		#calls to switch aux and destiny
+		jal move1		#makes the move
+		jal recursion2		#calls to switch aux and origin
 	lw $ra,0($sp)
-	jr $ra
+	addi $sp,$sp,4		#returns to RA
+	jr $ra			#from where it was called
 
-base:	lui $s1,0x1001
-	bne $t0,$s0,baseMul
-	sw $t7,0($s1)
-	jr $ra
+base:	lui $s1,0x1001		#base case: n=1
+b2:	bne $t0,$s0,baseMul	#calculates memmory spaces based on N discs
+	sw $t7,0($s1)		#loads the last disc in the top of the destiny tower
+	jr $ra			#returns to call
 baseMul: addi, $s1,$s1,4
-	j base
+	j b2
 	
 recursion1:	
 		addi $a0, $a0, -1	#height param -1
 		add $t0, $zero, $a2	#switch dest with aux
 		add $a2, $zero, $a3	
 		add $a3, $zero, $t0
+		addi $sp, $sp, -16	#backup temporaries
+			sw $a1, 0($sp)
+			sw $a2, 4($sp)
+			sw $a3, 8($sp)	
+			sw $ra, 12($sp)
+		jal hanoi
+			sw $a1, 0($sp)
+			sw $a2, 4($sp)
+			sw $a3, 8($sp)	
+			sw $ra, 12($sp)
+		addi $sp, $sp, 16
+		jr $ra
 
 move1:	
 
-	
 
-exit:
+recursion2:	
+		addi $a0, $a0, -1	#height param -1
+		add $t0, $zero, $a1	#switch dest with aux
+		add $a1, $zero, $a2	
+		add $a2, $zero, $t0
+		addi $sp, $sp, -16	#backup temporaries
+			sw $a1, 0($sp)
+			sw $a2, 4($sp)
+			sw $a3, 8($sp)	
+			sw $ra, 12($sp)
+		jal hanoi
+			sw $a1, 0($sp)
+			sw $a2, 4($sp)
+			sw $a3, 8($sp)	
+			sw $ra, 12($sp)
+		addi $sp, $sp, 16
+		jr $ra	
+
+exit:	#end of program
