@@ -36,7 +36,8 @@ hanoi:
 base:	lui $s1,0x1001		#base case: n=1
 	addi $t0,$zero,1	#initialize t0 with 1	
 b2:	bne $t0,$s0,baseMul	#calculates memory spaces based on N discs
-	sw $t7,0($s1)		#loads the last disc in the top of the destiny tower
+	lw $t7,0($s1)		#loads the last disc on the top of the destiny tower
+	sw $zero, 0($s1)
 	jr $ra			#returns to call
 baseMul: addi, $s1,$s1,4	#counts 4 n times
 	addi $t0,$t0,1		#j++
