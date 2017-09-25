@@ -1,4 +1,3 @@
-.data
 .text
 	addi $t7, $zero, 1	#temporary to store 1
 	addi $s0,$zero, 8	#number of discs
@@ -71,7 +70,6 @@ addtopdisk:	lw $t4,0($t6)		#loads in t4 pos 0 of origin tower
 		j addtopdisk		#goes to loop
 retadd:		sw $t2,0($t6)
 		jr $ra	
-		
 removetopdisk:	lw $t4,0($t6)		#loads in t4 pos 0 of origin tower
 		beq $t4,$t5,retremove 
 		addi $t6,$t6,4		#jumps to next position in tower
@@ -80,7 +78,7 @@ retremove:	addi $t6,$t6,-4		#returns to pos-1 (top disk)
 		lw $t2,0($t6)		#stores top disk in t2
 		sw $zero,0($t6)		#removes top disk from origin
 		jr $ra
-		
+	
 recursion2:	addi $sp, $sp, -20	#backup temporaries
 			sw $a1, 0($sp)
 			sw $a2, 4($sp)
