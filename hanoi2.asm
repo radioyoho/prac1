@@ -34,7 +34,7 @@ hanoi:
 	sw $a3, 12($sp)	
 	sw $ra, 16($sp)
 	beq $a0, $t7, base	#if !1 goes to first recursive func
-	addi $a1, $a1, 4	#adress + 4
+	
 	j first
 #----------------------------/MAIN--------------------------------------------------
 base:
@@ -70,6 +70,8 @@ base:
 		
 #------------------------------/BASE------------------------------------------------
 first:
+	addi $a2, $a2, -4
+	addi $a1, $a1, 4	#adress + 4
 	addi $a0, $a0, -1	#FIRST RECURSIVE
 	add $t0, $zero, $a2	#switch dest with aux
 	add $a2, $zero, $a3	
