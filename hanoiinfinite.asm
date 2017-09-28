@@ -1,3 +1,7 @@
+#Finely crafted by: 
+#	Santiago Soulé
+#	Darío Hoyo
+
 .data
 .text
 	#<init>
